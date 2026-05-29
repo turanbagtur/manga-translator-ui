@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-漫画翻译器启动脚本
+Manga Ceviri Baslatic Betigi
 Manga Translator UI Launcher
 """
 
@@ -47,13 +47,13 @@ MIRROR_URLS = [
 def is_python_version_valid():
     """检查Python版本是否符合要求"""
     if sys.version_info < PYTHON_VERSION_MIN:
-        print(f'错误: 需要 Python {PYTHON_VERSION_MIN[0]}.{PYTHON_VERSION_MIN[1]}+ ')
-        print(f'当前版本: Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')
+        print(f'Hata: Python gerekli {PYTHON_VERSION_MIN[0]}.{PYTHON_VERSION_MIN[1]}+ ')
+        print(f'当前Surum: Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')
         return False
     if sys.version_info[:2] > PYTHON_VERSION_MAX:
-        print(f'错误: 仅支持 Python {PYTHON_VERSION_MAX[0]}.{PYTHON_VERSION_MAX[1]},不支持更高版本')
-        print(f'当前版本: Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')
-        print(f'请使用 Python {PYTHON_VERSION_MAX[0]}.{PYTHON_VERSION_MAX[1]} 版本')
+        print(f'Hata: Sadece Python {PYTHON_VERSION_MAX[0]}.{PYTHON_VERSION_MAX[1]}, daha yuksek surum desteklenmez')
+        print(f'当前Surum: Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')
+        print(f'Lutfen Python kullanin {PYTHON_VERSION_MAX[0]}.{PYTHON_VERSION_MAX[1]} 版本')
         return False
     return True
 
@@ -189,7 +189,7 @@ def run_pip(args, desc=None):
         try:
             mirror_name = urllib.parse.urlparse(mirror).hostname or mirror
             if i == 0:
-                print(f"正在安装 {desc}...")
+                print(f"Kuruluyor: {desc}...")
             else:
                 print(f"尝试备用镜像源: {mirror_name}")
             
@@ -360,7 +360,7 @@ def run_pip_requirements(requirements_file, desc=None):
         mirrors_to_try = MIRROR_URLS.copy()
     
     total = len(packages)
-    print(f"正在安装 {desc or requirements_file}... (共 {total} 个包)")
+    print(f"Kuruluyor: {desc or requirements_file}... (共 {total} 个包)")
     
     # 当前镜像索引
     current_mirror_idx = 0
@@ -404,7 +404,7 @@ def run_pip_requirements(requirements_file, desc=None):
                 pkg_idx += 1
             else:
                 # 安装失败，尝试下一个镜像
-                print(f"[失败] {pkg_display} 在 {mirror_name} 安装失败")
+                print(f"[BASARISIZ] {pkg_display} 在 {mirror_name} 安装失败")
                 
                 # 切换到下一个镜像
                 current_mirror_idx += 1
@@ -431,7 +431,7 @@ def run_pip_requirements(requirements_file, desc=None):
             next_mirror_name = urllib.parse.urlparse(next_mirror).hostname or next_mirror
             print(f"[重试] 切换到镜像 {next_mirror_name}，从 {pkg_display} 重新开始...")
     
-    print(f"[完成] {desc or requirements_file} 安装完成")
+    print(f"[TAMAM] {desc or requirements_file} kurulumu tamamlandi")
 
 
 def ensure_git_safe_directory():
@@ -590,7 +590,7 @@ def detect_gpu():
                     # 库不存在，尝试安装
                     try:
                         import subprocess as sp
-                        print('正在安装 wmi 库以进行显卡检测...')
+                        print('Kuruluyor: wmi 库以进行显卡检测...')
                         sp.run([python, '-m', 'pip', 'install', 'wmi', '--quiet'], check=True, timeout=30)
                         import wmi
                         print('wmi 库安装成功')
@@ -761,7 +761,7 @@ def detect_amd_gfx_version(gpu_name):
 
 def print_supported_amd_gpu_types():
     """打印当前支持的 AMD 显卡类型"""
-    print('当前支持的 AMD 显卡类型:')
+    print('Desteklenen AMD ekran karti turleri:')
     print('  - MI300A / MI300X (gfx94X-dcgpu)')
     print('  - MI350X / MI355X (gfx950-dcgpu)')
     print('  - RX 7900 XTX / RX 7800 XT / RX 7700S (Framework Laptop 16) (gfx110X-dgpu)')
@@ -776,14 +776,14 @@ def choose_when_amd_unsupported():
     print('⚠️  当前显卡不在 AMD ROCm PyTorch 支持列表中。')
     print_supported_amd_gpu_types()
     print('')
-    print('请选择:')
-    print('  [1] 使用 CPU 版本 (默认, 推荐)')
-    print('  [2] 强制安装 AMD 版本 (实验性, 可能失败)')
-    print('  [3] 退出安装')
+    print('Seciniz:')
+    print('  [1] CPU surumu kullan (varsayilan, onerilen)')
+    print('  [2] AMD surumunu zorla kur (deneysel, basarisiz olabilir)')
+    print('  [3] Kurulumdan cik')
     print('')
 
     while True:
-        choice = input('请选择 (1/2/3, 默认1): ').strip()
+        choice = input('Seciniz (1/2/3, varsayilan 1): ').strip()
         if choice in ['', '1']:
             return 'cpu'
         elif choice == '2':
@@ -791,7 +791,7 @@ def choose_when_amd_unsupported():
         elif choice == '3':
             return 'exit'
         else:
-            print('无效输入,请输入 1, 2 或 3')
+            print('Gecersiz giris, lutfen 1, 2 veya 3 girin')
 
 
 def detect_installed_pytorch_version():
@@ -867,7 +867,7 @@ def prepare_environment(args):
     """
     
     if args.frozen:
-        print('frozen模式: 跳过依赖安装')
+        print('frozen modu: bagimlilik kurulumu atlaniyor')
         return False, None
 
     # 确保 packaging 已安装 (需要 < 25.0 版本)
@@ -880,22 +880,22 @@ def prepare_environment(args):
             from packaging.requirements import Requirement
         except (ImportError, AttributeError):
             # packaging 版本过高,需要降级
-            print('检测到 packaging 版本不兼容,正在安装兼容版本...')
+            print('Uyumsuz packaging surumu tespit edildi, uyumlu surum kuruluyor...')
             run_pip("install 'packaging<25.0'", "packaging")
             import packaging
             import packaging.version
             import packaging.utils
-            print('✓ packaging 安装成功')
+            print('✓ packaging kuruldu')
     except (ModuleNotFoundError, ImportError):
-        print('正在安装 packaging 模块...')
+        print('Kuruluyor: packaging 模块...')
         run_pip("install 'packaging<25.0'", "packaging")
         try:
             import packaging
             import packaging.version
             import packaging.utils
-            print('✓ packaging 安装成功')
+            print('✓ packaging kuruldu')
         except (ModuleNotFoundError, ImportError):
-            print('✗ 警告: packaging 安装失败')
+            print('✗ Uyari: packaging kurulamadi')
 
     print('\n正在检查依赖...\n')
     
@@ -907,22 +907,22 @@ def prepare_environment(args):
     # 导入依赖检查工具
     try:
         from build_utils.package_checker import check_req_file
-        print('✓ 依赖检查工具加载成功')
+        print('✓ Bagimlilik kontrol araci yuklendi')
     except ImportError as e:
-        print(f'✗ 警告: 无法导入依赖检查工具')
-        print(f'   原因: {e}')
-        print('   将跳过增量检查,强制重新安装所有依赖')
+        print(f'✗ Uyari: Bagimlilik kontrol araci yuklenemedi')
+        print(f'   Neden: {e}')
+        print('   Artimsal kontrol atlaniyor, tum bagimliliklar yeniden kurulacak')
         check_req_file = lambda x: False
 
     # 检测GPU并选择对应的依赖文件
     gpu_type, gpu_name, cuda_major, cuda_version, driver_version = detect_gpu()
     print(f'\n检测到的计算设备: {gpu_type}')
     if gpu_name:
-        print(f'显卡型号: {gpu_name}')
+        print(f'Ekran karti: {gpu_name}')
     if cuda_version:
-        print(f'CUDA 版本: {cuda_version}')
+        print(f'CUDA Surum: {cuda_version}')
         if driver_version:
-            print(f'驱动版本: {driver_version}')
+            print(f'驱动Surum: {driver_version}')
     print()
     
     # 根据GPU类型选择requirements文件
@@ -965,28 +965,28 @@ except:
                         rocm_version = output.split('|')[1]
                         # 已安装 AMD ROCm PyTorch，获取版本信息
                         print(f'\n检测到已安装 AMD ROCm PyTorch')
-                        print(f'ROCm 版本: {rocm_version}')
+                        print(f'ROCm Surum: {rocm_version}')
                         print('')
                         
                         # 询问是否更新
-                        update_choice = input('是否更新 AMD ROCm PyTorch? (y/n, 默认n): ').strip().lower()
+                        update_choice = input('AMD ROCm PyTorch guncelleme? (y/n, varsayilan n): ').strip().lower()
                         if update_choice in ['y', 'yes']:
                             # 自动检测 gfx 版本
                             detected_gfx, arch_name, has_torch = detect_amd_gfx_version(gpu_name) if gpu_name else (None, None, False)
                             
                             if detected_gfx and has_torch:
                                 print(f'\n自动识别架构: {arch_name}')
-                                print(f'对应 gfx 版本: {detected_gfx}')
-                                print('✓ 使用自动检测到的 gfx 版本')
+                                print(f'对应 gfx Surum: {detected_gfx}')
+                                print('✓ Otomatik tespit edilen gfx surumu kullaniliyor')
                                 amd_gfx_version = detected_gfx
                             elif detected_gfx and not has_torch:
-                                print(f'\n⚠️  警告: {detected_gfx} 不支持 AMD ROCm PyTorch')
+                                print(f'\n⚠️  警告: {detected_gfx} AMD ROCm PyTorch desteklemiyor')
                                 user_action = choose_when_amd_unsupported()
                                 if user_action == 'exit':
-                                    print('已取消安装，请确认显卡型号和驱动版本后重试。')
+                                    print('Kurulum iptal edildi, ekran karti ve surucu surumunu dogrulayin.')
                                     sys.exit(0)
                                 elif user_action == 'force_amd':
-                                    print('⚠️  已选择强制安装 AMD 版本，兼容性无法保证。')
+                                    print('⚠️  AMD surumunu zorla kur secildi, uyumluluk garantisi yoktur.')
                                     use_amd_pytorch = True
                                     amd_gfx_version = detected_gfx
                                 else:
@@ -996,10 +996,10 @@ except:
                                 print('\n⚠️  无法自动检测到受支持的 AMD gfx 版本')
                                 user_action = choose_when_amd_unsupported()
                                 if user_action == 'exit':
-                                    print('已取消安装，请确认显卡型号和驱动版本后重试。')
+                                    print('Kurulum iptal edildi, ekran karti ve surucu surumunu dogrulayin.')
                                     sys.exit(0)
                                 elif user_action == 'force_amd':
-                                    print('⚠️  已选择强制安装 AMD 版本，兼容性无法保证。')
+                                    print('⚠️  AMD surumunu zorla kur secildi, uyumluluk garantisi yoktur.')
                                     use_amd_pytorch = True
                                 else:
                                     requirements_file = 'requirements_cpu.txt'
@@ -1017,10 +1017,10 @@ except:
                         print('\n检测到已安装 AMD ROCm PyTorch，本次不更新。')
                     else:
                         print('\n未检测到 AMD ROCm PyTorch')
-                        print('[INFO] 手动指定了 requirements_amd.txt，但未安装 AMD PyTorch')
-                        print('[INFO] 如需安装 AMD PyTorch，请运行 步骤1-首次安装.bat')
+                        print('[BILGI] requirements_amd.txt manuel belirlendi ancak AMD PyTorch kurulu degil')
+                        print('[BILGI] AMD PyTorch kurmak icin Adim1-IlkKurulum.bat calistirin')
                 else:
-                    print(f'\n✓ 使用: {requirements_file} (CPU版本)')
+                    print(f'\n✓ 使用: {requirements_file} (CPU surumu)')
                 use_amd_pytorch = False
         else:
             pass  # 不是AMD，use_amd_pytorch已在开头初始化为False
@@ -1028,80 +1028,80 @@ except:
         # 自动选择
         if gpu_type == "NVIDIA":
             print('=' * 50)
-            print('检测到 NVIDIA GPU')
+            print('NVIDIA GPU tespit edildi')
             print('=' * 50)
             print('')
             
             # 检查 CUDA 版本
             if cuda_major is not None:
                 if cuda_major < 12:
-                    print('⚠️  警告: 检测到 CUDA 版本低于 12')
-                    print(f'   当前 CUDA 版本: {cuda_version}')
-                    print(f'   GPU 版本需要: CUDA 12.x')
-                    print(f'   驱动版本要求: >= 525.60.13')
+                    print('⚠️  Uyari: CUDA surumu 12 nin altinda tespit edildi')
+                    print(f'   当前 CUDA Surum: {cuda_version}')
+                    print(f'   GPU surumu gerekliligi: CUDA 12.x')
+                    print(f'   Surucu surumu gerekliligi: >= 525.60.13')
                     print('')
-                    print('您的 CUDA 版本过低，无法使用 GPU 版本。')
-                    print('请选择:')
-                    print('  [1] 更新 NVIDIA 驱动后重新运行安装')
-                    print('  [2] 使用 CPU 版本')
+                    print('CUDA surumunuz cok dusuk, GPU surumunu kullanamazsiniz.')
+                    print('Seciniz:')
+                    print('  [1] NVIDIA surucu guncelleyip kurulumu yeniden calistirin')
+                    print('  [2] CPU surumunu kullanin')
                     print('')
                     
                     while True:
-                        choice = input('请选择 (1/2, 默认2): ').strip()
+                        choice = input('Seciniz (1/2, varsayilan 2): ').strip()
                         if choice == '1':
-                            print('\n请访问 NVIDIA 官网下载最新驱动:')
+                            print('\nEn son surucu icin NVIDIA resmi sitesini ziyaret edin:')
                             print('https://www.nvidia.com/Download/index.aspx')
-                            print('\n安装驱动后请重新运行此脚本')
+                            print('\nSurucu kurulumundan sonra bu betigi yeniden calistirin')
                             sys.exit(0)
                         elif choice in ['', '2']:
                             requirements_file = 'requirements_cpu.txt'
-                            print(f'✓ 使用: {requirements_file} (CPU版本)')
+                            print(f'✓ 使用: {requirements_file} (CPU surumu)')
                             break
                         else:
-                            print('无效输入,请输入 1 或 2')
+                            print('Gecersiz giris, lutfen 1 veya 2 girin')
                 else:
                     # CUDA 版本符合要求
-                    print('GPU 版本需要:')
-                    print('  - NVIDIA 显卡支持 CUDA 12.x')
-                    print('  - 显卡驱动版本 >= 525.60.13')
+                    print('GPU surumu gereklilikleri:')
+                    print('  - CUDA 12.x destekleyen NVIDIA ekran karti')
+                    print('  - Ekran karti surucu surumu >= 525.60.13')
                     print('')
-                    print(f'✓ 您的 CUDA 版本 {cuda_version} 符合要求')
+                    print(f'✓ CUDA surumunuz {cuda_version} gereklilikleri karsilaniyor')
                     print('')
-                    print('如果不确定,可以选择 CPU 版本(速度较慢但兼容性好)')
+                    print('Emin degilseniz CPU surumunu secin (daha yavas ama daha uyumlu)')
                     print('')
                     
                     while True:
-                        choice = input('使用 GPU 版本? (y/n, 默认y): ').strip().lower()
+                        choice = input('GPU surumu kullanilsin? (y/n, varsayilan y): ').strip().lower()
                         if choice in ['', 'y', 'yes']:
                             requirements_file = 'requirements_gpu.txt'
                             print(f'✓ 使用: {requirements_file} (NVIDIA CUDA)')
                             break
                         elif choice in ['n', 'no']:
                             requirements_file = 'requirements_cpu.txt'
-                            print(f'✓ 使用: {requirements_file} (CPU版本)')
+                            print(f'✓ 使用: {requirements_file} (CPU surumu)')
                             break
                         else:
                             print('无效输入,请输入 y 或 n')
             else:
                 # 无法检测 CUDA 版本
-                print('⚠️  无法检测 CUDA 版本 (可能未安装 nvidia-smi)')
+                print('⚠️  CUDA surumu tespit edilemiyor (nvidia-smi kurulu olmayabilir)')
                 print('')
-                print('GPU 版本需要:')
-                print('  - NVIDIA 显卡支持 CUDA 12.x')
-                print('  - 显卡驱动版本 >= 525.60.13')
+                print('GPU surumu gereklilikleri:')
+                print('  - CUDA 12.x destekleyen NVIDIA ekran karti')
+                print('  - Ekran karti surucu surumu >= 525.60.13')
                 print('')
-                print('如果不确定,可以选择 CPU 版本(速度较慢但兼容性好)')
+                print('Emin degilseniz CPU surumunu secin (daha yavas ama daha uyumlu)')
                 print('')
                 
                 while True:
-                    choice = input('使用 GPU 版本? (y/n, 默认y): ').strip().lower()
+                    choice = input('GPU surumu kullanilsin? (y/n, varsayilan y): ').strip().lower()
                     if choice in ['', 'y', 'yes']:
                         requirements_file = 'requirements_gpu.txt'
                         print(f'✓ 使用: {requirements_file} (NVIDIA CUDA)')
                         break
                     elif choice in ['n', 'no']:
                         requirements_file = 'requirements_cpu.txt'
-                        print(f'✓ 使用: {requirements_file} (CPU版本)')
+                        print(f'✓ 使用: {requirements_file} (CPU surumu)')
                         break
                     else:
                         print('无效输入,请输入 y 或 n')
@@ -1111,77 +1111,77 @@ except:
             detected_gfx, arch_name, has_torch = detect_amd_gfx_version(gpu_name)
             
             print('=' * 50)
-            print('检测到 AMD GPU')
+            print('AMD GPU tespit edildi')
             print('=' * 50)
             print('')
             
             if detected_gfx:
                 print(f'自动识别架构: {arch_name}')
-                print(f'对应 gfx 版本: {detected_gfx}')
+                print(f'对应 gfx Surum: {detected_gfx}')
                 if not has_torch:
-                    print(f'⚠️  该显卡不支持 AMD ROCm PyTorch')
-                    print(f'⚠️  建议使用 CPU 版本')
+                    print(f'⚠️  Bu ekran karti AMD ROCm PyTorch desteklemiyor')
+                    print(f'⚠️  CPU surumu onerilir')
             else:
-                print('⚠️  无法自动识别 AMD GPU 架构')
+                print('⚠️  AMD GPU mimarisi otomatik taninamadi')
             
             print('')
-            print('AMD GPU 支持选项:')
-            print('  [1] AMD ROCm GPU 版本 (实验性,需要兼容的 AMD 显卡)')
-            print('  [2] CPU 版本 (推荐,兼容性好)')
-            print('  ⚠️ Windows 版 ROCm 7.2 PyTorch 需要 AMD 显卡驱动 26.1.1')
+            print('AMD GPU destek secenekleri:')
+            print('  [1] AMD ROCm GPU surumu (deneysel, uyumlu AMD ekran karti gerektirir)')
+            print('  [2] CPU surumu (onerilen, uyumlu)')
+            print('  ⚠️ Windows ROCm 7.2 PyTorch, AMD ekran karti surucu 26.1.1 gerektirir')
             print('')
             
             if detected_gfx and has_torch:
-                print(f'建议: 选择 [1] 并使用检测到的 {detected_gfx}')
+                print(f'Oneri: [1] seciniz ve tespit edilen {detected_gfx}')
             else:
-                print('建议: 选择 [2] CPU 版本')
+                print('Oneri: [2] CPU surumunu seciniz')
             print('')
 
             # 检测到不支持时：展示支持型号并给出选择（默认 CPU）
             if not (detected_gfx and has_torch):
                 user_action = choose_when_amd_unsupported()
                 if user_action == 'exit':
-                    print('已取消安装，请确认显卡型号和驱动版本后重试。')
+                    print('Kurulum iptal edildi, ekran karti ve surucu surumunu dogrulayin.')
                     sys.exit(0)
                 elif user_action == 'force_amd':
                     requirements_file = 'requirements_amd.txt'
                     use_amd_pytorch = True
                     amd_gfx_version = detected_gfx
-                    print('⚠️  已选择强制安装 AMD 版本，兼容性无法保证。')
+                    print('⚠️  AMD surumunu zorla kur secildi, uyumluluk garantisi yoktur.')
                     print(f'✓ 使用: {requirements_file} (AMD 强制安装)')
                 else:
                     requirements_file = 'requirements_cpu.txt'
                     use_amd_pytorch = False
-                    print(f'✓ 使用: {requirements_file} (CPU版本)')
+                    print(f'✓ 使用: {requirements_file} (CPU surumu)')
             else:
                 while True:
-                    choice = input('请选择 (1/2, 默认2): ').strip()
+                    choice = input('Seciniz (1/2, varsayilan 2): ').strip()
                     if choice == '1':
                         amd_gfx_version = detected_gfx
                         requirements_file = 'requirements_amd.txt'  # 使用专用的 AMD 依赖文件
                         use_amd_pytorch = True
-                        print(f'✓ 自动识别并使用: {amd_gfx_version}')
-                        print(f'✓ 将使用 AMD ROCm PyTorch ({amd_gfx_version})')
-                        print(f'✓ 依赖文件: {requirements_file}')
+                        print(f'✓ Otomatik taninan ve kullanilan: {amd_gfx_version}')
+                        print(f'✓ AMD ROCm PyTorch kullanilacak ({amd_gfx_version})')
+                        print(f'✓ Bagimlilik dosyasi: {requirements_file}')
                         break
                     elif choice in ['', '2']:
                         requirements_file = 'requirements_cpu.txt'
-                        print(f'✓ 使用: {requirements_file} (CPU版本)')
+                        print(f'✓ 使用: {requirements_file} (CPU surumu)')
                         break
                     else:
-                        print('无效输入,请输入 1 或 2')
+                        print('Gecersiz giris, lutfen 1 veya 2 girin')
                     
         elif gpu_type == "AppleSilicon":
             # Apple Silicon Mac，使用 Metal 加速
             print('=' * 50)
-            print('检测到 Apple Silicon')
+            print('Apple Silicon tespit edildi')
             print('=' * 50)
             print('')
             if gpu_name:
                 print(f'芯片型号: {gpu_name}')
             print('')
-            print('✓ Apple Silicon 支持 Metal 加速')
-            print('✓ 将使用 Metal 版本以获得最佳性能')
+            print('✓ Apple Silicon Metal hizlandirmasini destekliyor')
+            print('✓ En iyi performans icin Metal surumu kullanilacak')
             print('')
             requirements_file = 'requirements_metal.txt'
             print(f'✓ 使用: {requirements_file} (Apple Metal)')
@@ -1189,17 +1189,17 @@ except:
         elif gpu_type == "CPU":
             # 自动检测失败,让用户手动选择
             print('=' * 50)
-            print('⚠️  无法自动检测显卡类型')
+            print('⚠️  Ekran karti turu otomatik tespit edilemiyor')
             print('=' * 50)
             print('')
             print('请手动选择安装版本:')
-            print('  [1] NVIDIA GPU 版本 (CUDA) - 需要 NVIDIA 显卡')
-            print('  [2] AMD GPU 版本 (ROCm) - 需要兼容的 AMD 显卡')
-            print('  [3] CPU 版本 - 兼容所有电脑')
+            print('  [1] NVIDIA GPU surumu (CUDA) - NVIDIA ekran karti gerektirir')
+            print('  [2] AMD GPU surumu (ROCm) - uyumlu AMD ekran karti gerektirir')
+            print('  [3] CPU surumu - tum bilgisayarlarla uyumlu')
             print('')
             
             while True:
-                choice = input('请选择 (1/2/3, 默认3): ').strip()
+                choice = input('Seciniz (1/2/3, varsayilan 3): ').strip()
                 if choice == '1':
                     requirements_file = 'requirements_gpu.txt'
                     print(f'✓ 使用: {requirements_file} (NVIDIA CUDA)')
@@ -1207,14 +1207,14 @@ except:
                 elif choice == '2':
                     # AMD GPU（纯自动检测）
                     print('')
-                    print('✓ 支持 PyTorch 的 AMD gfx 版本:')
+                    print('✓ PyTorch destekleyen AMD gfx surumleri:')
                     print('  - gfx94X-dcgpu: MI300A / MI300X')
                     print('  - gfx950-dcgpu: MI350X / MI355X')
                     print('  - gfx110X-dgpu: RX 7900 XTX / RX 7800 XT / RX 7700S (Framework Laptop 16)')
                     print('  - gfx1151:      AMD Strix Halo iGPU')
                     print('  - gfx120X-all:  RX 9060 / RX 9060 XT / RX 9070 / RX 9070 XT')
                     print('')
-                    print('✗ 不支持 PyTorch 的版本:')
+                    print('✗ PyTorch desteklemeyen surum:')
                     print('  - gfx101X-dgpu: RX 5000 系列')
                     print('  - gfx103X-dgpu: RX 6000 系列')
                     print('  - gfx90X-dcgpu: Vega / Radeon VII')
@@ -1226,58 +1226,58 @@ except:
                         requirements_file = 'requirements_amd.txt'
                         use_amd_pytorch = True
                         print(f'✓ 自动识别架构: {arch_name}')
-                        print(f'✓ 将使用 AMD ROCm PyTorch ({amd_gfx_version})')
-                        print(f'✓ 依赖文件: {requirements_file}')
+                        print(f'✓ AMD ROCm PyTorch kullanilacak ({amd_gfx_version})')
+                        print(f'✓ Bagimlilik dosyasi: {requirements_file}')
                         break
                     else:
                         user_action = choose_when_amd_unsupported()
                         if user_action == 'exit':
-                            print('已取消安装，请确认显卡型号和驱动版本后重试。')
+                            print('Kurulum iptal edildi, ekran karti ve surucu surumunu dogrulayin.')
                             sys.exit(0)
                         elif user_action == 'force_amd':
                             requirements_file = 'requirements_amd.txt'
                             use_amd_pytorch = True
                             amd_gfx_version = detected_gfx
-                            print('⚠️  已选择强制安装 AMD 版本，兼容性无法保证。')
+                            print('⚠️  AMD surumunu zorla kur secildi, uyumluluk garantisi yoktur.')
                             print(f'✓ 使用: {requirements_file} (AMD 强制安装)')
                         else:
                             requirements_file = 'requirements_cpu.txt'
                             use_amd_pytorch = False
-                            print(f'✓ 使用: {requirements_file} (CPU版本)')
+                            print(f'✓ 使用: {requirements_file} (CPU surumu)')
                         break
                 elif choice in ['', '3']:
                     requirements_file = 'requirements_cpu.txt'
-                    print(f'✓ 使用: {requirements_file} (CPU版本)')
+                    print(f'✓ 使用: {requirements_file} (CPU surumu)')
                     break
                 else:
-                    print('无效输入,请输入 1, 2 或 3')
+                    print('Gecersiz giris, lutfen 1, 2 veya 3 girin')
                     
         else:
             # Intel GPU - 在 Windows 上支持有限,推荐使用 CPU 版本
             print('=' * 50)
-            print('检测到 Intel GPU')
+            print('Intel GPU tespit edildi')
             print('=' * 50)
             print('')
-            print('⚠️  Intel GPU 在 PyTorch 上的支持有限')
-            print('推荐使用 CPU 版本以获得最佳兼容性')
+            print('⚠️  Intel GPU PyTorch destegi sinirli')
+            print('En iyi uyumluluk icin CPU surumu onerilir')
             print('')
-            print('请选择:')
-            print('  [1] NVIDIA GPU 版本 (如果有独立显卡)')
-            print('  [2] CPU 版本 (推荐)')
+            print('Seciniz:')
+            print('  [1] NVIDIA GPU surumu (ayri ekran karti varsa)')
+            print('  [2] CPU surumu (onerilen)')
             print('')
             
             while True:
-                choice = input('请选择 (1/2, 默认2): ').strip()
+                choice = input('Seciniz (1/2, varsayilan 2): ').strip()
                 if choice == '1':
                     requirements_file = 'requirements_gpu.txt'
                     print(f'✓ 使用: {requirements_file} (NVIDIA CUDA)')
                     break
                 elif choice in ['', '2']:
                     requirements_file = 'requirements_cpu.txt'
-                    print(f'✓ 使用: {requirements_file} (CPU版本)')
+                    print(f'✓ 使用: {requirements_file} (CPU surumu)')
                     break
                 else:
-                    print('无效输入,请输入 1 或 2')
+                    print('Gecersiz giris, lutfen 1 veya 2 girin')
     
     # 选择对应的PyTorch版本 (根据requirements_gpu.txt中的版本)
     # 注意: 不再单独安装 PyTorch，而是通过 requirements 文件统一安装
@@ -1295,18 +1295,18 @@ except:
             print('\n' + '=' * 50)
             print('⚠️  警告: 检测到 PyTorch 版本不匹配')
             print('=' * 50)
-            print(f'当前安装: {installed_pytorch_type} 版本 ({installed_detail})')
-            print(f'目标版本: {target_type} 版本')
+            print(f'Mevcut kurulum: {installed_pytorch_type} 版本 ({installed_detail})')
+            print(f'目标Surum: {target_type} 版本')
             print('')
-            print('不同版本的 PyTorch 会导致 DLL 冲突和加载失败')
-            print('建议卸载旧版本后重新安装')
+            print('Farkli PyTorch surumleri DLL catismasi ve yukleme hatasina yol acar')
+            print('Eski surumu kaldirip yeniden kurmaniz onerilir')
             print('')
             need_reinstall = True
     
     # 如果需要重装 PyTorch，先卸载
     if need_reinstall or use_amd_pytorch:
-        print('正在卸载现有的 PyTorch...')
-        print('[提示] 请确保没有其他 Python 进程正在运行')
+        print('Mevcut PyTorch kaldiriliyor...')
+        print('[IPUCU] Baska Python isleminin calismadigindan emin olun')
         
         # 尝试多次卸载，处理文件占用问题
         max_retries = 3
@@ -1320,11 +1320,11 @@ except:
                     print('请关闭所有使用 PyTorch 的程序，然后按回车继续...')
                     input()
                 else:
-                    print(f'警告: PyTorch 卸载失败，将尝试强制覆盖安装')
+                    print(f'Uyari: PyTorch kaldirilamadi, zorla uzerine kurulmaya calisilacak')
                     print(f'错误: {e}')
         
         # 强制清理 pip 缓存，避免使用缓存的错误版本
-        print('正在清理 pip 缓存...')
+        print('pip onbellegi temizleniyor...')
         try:
             run(f'"{python}" -m pip cache purge', "清理缓存", "无法清理缓存")
         except:
@@ -1333,12 +1333,12 @@ except:
     # 如果用户选择了 AMD ROCm PyTorch，先安装它
     if use_amd_pytorch:
         print('\n' + '=' * 50)
-        print('正在安装 AMD ROCm PyTorch')
+        print('AMD ROCm PyTorch kuruluyor')
         print('=' * 50)
         if amd_gfx_version:
-            print(f'gfx 版本: {amd_gfx_version}')
-        print('模式: ROCm SDK 7.2 固定 URL 安装')
-        print('⚠️  前置要求: Windows 版 ROCm 7.2 PyTorch 必须安装 AMD 显卡驱动 26.1.1')
+            print(f'gfx Surum: {amd_gfx_version}')
+        print('Mod: ROCm SDK 7.2 sabit URL kurulumu')
+        print('⚠️  On kosul: Windows ROCm 7.2 PyTorch, AMD ekran karti surucu 26.1.1 gerektirir')
         print('')
 
         # 第1步：先安装 ROCm SDK 依赖
@@ -1362,31 +1362,31 @@ except:
         install_torch_cmd = f'"{python}" -m pip install --no-cache-dir {torch_urls_str}'
 
         try:
-            run(install_sdk_cmd, "步骤 1/2: 安装 AMD ROCm SDK 依赖", "AMD ROCm SDK 依赖安装失败", live=True)
-            run(install_torch_cmd, "步骤 2/2: 安装 AMD ROCm PyTorch", "AMD ROCm PyTorch 安装失败", live=True)
-            print('\n✓ AMD ROCm PyTorch 安装完成')
+            run(install_sdk_cmd, "Adim 1/2: AMD ROCm SDK bagimliliklerini kur", "AMD ROCm SDK bagimlilikleri kurulamadi", live=True)
+            run(install_torch_cmd, "Adim 2/2: AMD ROCm PyTorch kur", "AMD ROCm PyTorch kurulamadi", live=True)
+            print('\n✓ AMD ROCm PyTorch kurulumu tamamlandi')
             print('\n⚠️  注意:')
-            print('  - AMD ROCm PyTorch 是实验性功能')
-            print('  - 首次运行可能需要编译某些操作')
-            print('  - 如果遇到问题,请使用 CPU 版本')
+            print('  - AMD ROCm PyTorch deneysel bir ozellik')
+            print('  - Ilk calistirmada bazi islemler derlenebilir')
+            print('  - Sorun yasarsaniz CPU surumunu kullanin')
         except Exception as e:
-            print(f'\n✗ AMD ROCm PyTorch 安装失败: {e}')
+            print(f'\n✗ AMD ROCm PyTorch kurulamadi: {e}')
             print('\n建议:')
-            print('  1. 检查网络连接')
-            print('  2. 确认 Python 版本为 3.12')
-            print('  3. 如果仍有问题,请使用 CPU 版本重新安装')
+            print('  1. Ag baglantisini kontrol edin')
+            print('  2. Python surumunun 3.12 oldugunu dogrulayin')
+            print('  3. Sorun devam ederse CPU surumuyle yeniden kurun')
             # 安装失败，返回失败状态
             return False, None
 
     # 检查并安装其他依赖
     if not os.path.exists(requirements_file):
-        print(f'警告: 未找到 {requirements_file}')
+        print(f'Uyari: Bulunamadi: {requirements_file}')
         return False, None
 
     print(f'\n正在检查依赖: {requirements_file}')
     if not check_req_file(requirements_file) or need_reinstall:
         if need_reinstall:
-            print(f'强制重新安装所有依赖...')
+            print(f'Tum bagimliliklar zorla yeniden kuruluyor...')
             # 只有 AMD 用户才会在前面单独安装 PyTorch，其他用户需要从 requirements 安装
             if use_amd_pytorch:
                 print('跳过 requirements 中的 PyTorch（AMD ROCm 已单独安装）')
@@ -1418,11 +1418,11 @@ except:
             else:
                 run_pip_requirements(requirements_file, f"{requirements_file} 中的依赖")
         else:
-            print(f'发现缺失依赖,正在安装...')
+            print(f'Eksik bagimlilikler bulundu, kuruluyor...')
             # 使用逐个包安装，失败时从失败的包开始切换镜像重试
             run_pip_requirements(requirements_file, f"{requirements_file} 中的依赖")
     else:
-        print(f'依赖已满足 ✓')
+        print(f'Bagimliliklar karsilandi ✓')
     
     # 返回 AMD PyTorch 相关信息
     return use_amd_pytorch, amd_gfx_version
@@ -1437,23 +1437,23 @@ def update_repository(args):
     if not args.update:
         return False
 
-    print('正在检查更新...')
+    print('Guncellemeler kontrol ediliyor...')
     try:
         current_commit = commit_hash()
         run(f"{git} fetch origin {BRANCH}", desc="正在从远程拉取更新...", errdesc="拉取更新失败")
         latest_commit = run(f"{git} rev-parse origin/{BRANCH}").strip()
 
         if current_commit != latest_commit:
-            print("发现新版本,正在更新...")
-            run(f"{git} pull origin {BRANCH}", desc="正在更新代码库...", errdesc="更新失败")
-            print("更新完成,正在重启应用...")
+            print("Yeni surum bulundu, guncelleniyor...")
+            run(f"{git} pull origin {BRANCH}", desc="Kod deposu guncelleniyor...", errdesc="更新失败")
+            print("Guncelleme tamamlandi, uygulama yeniden baslatiliyor...")
             restart()
             return True
         else:
-            print("已是最新版本")
+            print("Zaten en yeni surum")
     except Exception as e:
-        print(f"更新检查失败: {e}")
-        print("继续使用当前版本")
+        print(f"Guncelleme kontrolu basarisiz: {e}")
+        print("Mevcut surum kullanilmaya devam ediliyor")
     
     return False
 
@@ -1496,18 +1496,18 @@ def check_version_info():
     except Exception:
         remote_version = "unknown"
     
-    print(f"当前版本 - {current_version}")
-    print(f"远程版本 - {remote_version}")
+    print(f"Mevcut surum - {current_version}")
+    print(f"Uzak surum - {remote_version}")
     
     if current_version == remote_version:
         print()
-        print("[信息] 当前已是最新版本")
+        print("[BILGI] Zaten en yeni surum")
     elif remote_version == "unknown":
         print()
-        print("[警告] 无法获取远程版本信息")
+        print("[UYARI] Uzak surum bilgisi alinamadi")
     else:
         print()
-        print("[发现新版本]")
+        print("[YENI SURUM BULUNDU]")
     
     print("=" * 40)
     return current_version, remote_version
@@ -1527,25 +1527,25 @@ def update_code_force(skip_confirm=False):
     print()
 
     if not skip_confirm:
-        print("[警告] 将强制同步到远程分支,本地修改将被覆盖")
-        confirm = input("是否继续更新? (y/n): ").strip().lower()
+        print("[UYARI] Uzak dala zorla senkronize edilecek, yerel degisiklikler silinecek")
+        confirm = input("Guncellemeye devam edilsin mi? (y/n): ").strip().lower()
         if confirm not in ['y', 'yes']:
-            print("取消更新")
+            print("Guncelleme iptal edildi")
             return False
     
     print()
-    print("获取远程更新...")
+    print("Uzak guncellemeler aliniyor...")
     try:
         subprocess.run([git, 'fetch', 'origin'], check=True)
     except subprocess.CalledProcessError as e:
-        print(f"[ERROR] 获取远程更新失败: {e}")
+        print(f"[HATA] Uzak guncellemeler alinamadi: {e}")
         return False
     
     print()
-    print("正在强制同步到远程分支...")
+    print("Uzak dala zorla senkronize ediliyor...")
     try:
         subprocess.run([git, 'reset', '--hard', 'origin/main'], check=True)
-        print("[OK] 代码更新完成")
+        print("[TAMAM] Kod guncellendi")
         
         # 清理平台特定文件
         import platform
@@ -1562,7 +1562,7 @@ def update_code_force(skip_confirm=False):
                 '.gitignore',
                 'LICENSE.txt'
             ]
-            print("[OK] 已清理 macOS 脚本和 Git 配置文件")
+            print("[TAMAM] macOS betikleri ve Git yapilandirma dosyalari temizlendi")
         elif platform.system() == 'Darwin':
             # macOS 环境清理 Windows 文件
             files_to_remove = [
@@ -1574,7 +1574,7 @@ def update_code_force(skip_confirm=False):
                 '.gitignore',
                 'LICENSE.txt'
             ]
-            print("[OK] 已清理 Windows 脚本和 Git 配置文件")
+            print("[TAMAM] Windows betikleri ve Git yapilandirma dosyalari temizlendi")
         else:
             files_to_remove = []
         
@@ -1587,7 +1587,7 @@ def update_code_force(skip_confirm=False):
         
         return True
     except subprocess.CalledProcessError as e:
-        print(f"[ERROR] 代码更新失败: {e}")
+        print(f"[HATA] Kod guncellenemedi: {e}")
         return False
 
 
@@ -1595,7 +1595,7 @@ def update_dependencies(args):
     """更新依赖"""
     print()
     print("=" * 40)
-    print("更新/安装依赖")
+    print("Bagimliliklari Guncelle/Kur")
     print("=" * 40)
     print()
     
@@ -1608,21 +1608,21 @@ def update_dependencies(args):
     req_file, pytorch_type, detail = get_requirements_file_from_env()
     if req_file:
         args.requirements = req_file
-        print(f"检测到 PyTorch 类型: {pytorch_type} ({detail})")
+        print(f"Tespit edilen PyTorch turu: {pytorch_type} ({detail})")
         print(f"使用: {req_file}")
     else:
         args.requirements = 'auto'
-        print("未检测到 PyTorch,将进行首次安装...")
+        print("PyTorch tespit edilemedi, ilk kurulum yapilacak...")
     
     print()
     
     try:
         prepare_environment(args)
         print()
-        print("[OK] 依赖更新完成")
+        print("[TAMAM] Bagimliliklar guncellendi")
         return True
     except Exception as e:
-        print(f"[ERROR] 依赖更新失败: {e}")
+        print(f"[HATA] Bagimliliklar guncellenemedi: {e}")
         return False
 
 
@@ -1636,12 +1636,12 @@ def update_dependencies_selective(args, missing_packages):
     
     print()
     print("=" * 40)
-    print("安装缺失依赖")
+    print("Eksik Bagimlilikleri Kur")
     print("=" * 40)
     print()
     
     if not missing_packages:
-        print("[信息] 没有缺失的依赖包")
+        print("[BILGI] Eksik bagimlilik yok")
         return True
     
     # 导入依赖检查工具
@@ -1655,7 +1655,7 @@ def update_dependencies_selective(args, missing_packages):
         has_checker = True
     except ImportError:
         has_checker = False
-        print("[警告] 无法导入依赖检查工具，将不进行安装前检查")
+        print("[UYARI] Bagimlilik kontrol araci yuklenemedi, kurulum oncesi kontrol yapilmayacak")
     
     # 从 requirements 文件读取 PyTorch 源
     primary_index_url = None
@@ -1669,7 +1669,7 @@ def update_dependencies_selective(args, missing_packages):
                         parts = line.split(None, 1)
                         if len(parts) == 2:
                             primary_index_url = parts[1].strip()
-                            print(f"检测到 PyTorch 源: {primary_index_url}")
+                            print(f"Tespit edilen PyTorch kaynagi: {primary_index_url}")
                         break
         except Exception:
             pass
@@ -1694,7 +1694,7 @@ def update_dependencies_selective(args, missing_packages):
                 return True
         return False
     
-    print(f"共需要安装 {len(missing_packages)} 个包")
+    print(f"Kurulacak toplam: {len(missing_packages)} 个包")
     print()
     
     # 逐个安装缺失的包
@@ -1705,12 +1705,12 @@ def update_dependencies_selective(args, missing_packages):
     for i, pkg in enumerate(missing_packages, 1):
         pkg_name = pkg.split('==')[0].split('>=')[0].split('<=')[0].split('[')[0].split('@')[0].strip()
         
-        # 安装前检查包是否已满足要求
+        # 安装前检查包是否Karsilandi要求
         if has_checker:
             try:
                 req = Requirement(pkg)
                 if _check_req(req):
-                    print(f"[{i}/{len(missing_packages)}] {pkg_name} 已安装，跳过")
+                    print(f"[{i}/{len(missing_packages)}] {pkg_name} zaten kurulu, atlaniyor")
                     skip_count += 1
                     continue
             except Exception:
@@ -1722,21 +1722,21 @@ def update_dependencies_selective(args, missing_packages):
             # 检查是否是 PyTorch 相关包
             if is_pytorch_package(pkg_name) and primary_index_url:
                 # 使用 PyTorch 源安装，忽略版本锁定安装最新版
-                print(f"    (使用 PyTorch 源)")
+                print(f"    (PyTorch kaynagi kullaniliyor)")
                 parsed = urllib.parse.urlparse(primary_index_url)
                 trusted_host = f'--trusted-host {parsed.hostname}' if parsed.hostname else ''
                 # 只用包名，不带版本号
                 cmd = f'"{python}" -m pip install "{pkg_name}" --index-url {primary_index_url} {trusted_host} --prefer-binary --disable-pip-version-check'
                 result = subprocess.run(cmd, shell=True, env=os.environ)
                 if result.returncode != 0:
-                    raise RuntimeError(f"安装失败，返回码: {result.returncode}")
+                    raise RuntimeError(f"Kurulum basarisiz, donus kodu: {result.returncode}")
             else:
                 # 普通包，使用 run_pip（支持镜像源回退）
                 run_pip(f'install "{pkg}"', pkg_name)
             
             success_count += 1
         except Exception as e:
-            print(f"[失败] {pkg_name}: {e}")
+            print(f"[BASARISIZ] {pkg_name}: {e}")
             fail_count += 1
     
     print()
@@ -1760,7 +1760,7 @@ def check_all_updates():
     print()
     
     # 1. 检查代码版本和提交
-    print("[1/2] 检查代码版本...")
+    print("[1/2] Kod surumu kontrol ediliyor...")
     version_file = PATH_ROOT / "packaging" / "VERSION"
     try:
         if version_file.exists():
@@ -1815,27 +1815,27 @@ def check_all_updates():
     except Exception:
         remote_commit = "unknown"
     
-    # 判断是否需要更新：版本号不同 或 提交不同
+    # 判断是否Guncelleme gerekli：版本号不同 或 提交不同
     version_differs = (current_version != remote_version and remote_version != "unknown")
     commit_differs = (local_commit != remote_commit and remote_commit != "unknown" and local_commit != "unknown")
     code_needs_update = version_differs or commit_differs
     
-    print(f"  当前版本: {current_version}")
-    print(f"  远程版本: {remote_version}")
-    print(f"  本地提交: {local_commit[:8] if local_commit != 'unknown' else 'unknown'}")
-    print(f"  远程提交: {remote_commit[:8] if remote_commit != 'unknown' else 'unknown'}")
+    print(f"  当前Surum: {current_version}")
+    print(f"  远程Surum: {remote_version}")
+    print(f"  本地Commit: {local_commit[:8] if local_commit != 'unknown' else 'unknown'}")
+    print(f"  远程Commit: {remote_commit[:8] if remote_commit != 'unknown' else 'unknown'}")
     
     if code_needs_update:
         if version_differs:
-            print("  状态: [需要更新 - 版本不同]")
+            print("  状态: [Guncelleme gerekli - 版本不同]")
         else:
-            print("  状态: [需要更新 - 有新提交]")
+            print("  状态: [Guncelleme gerekli - 有新提交]")
     else:
-        print("  状态: [已是最新]")
+        print("  状态: [Zaten en yeni]")
     
     # 2. 检查依赖
     print()
-    print("[2/2] 检查依赖...")
+    print("[2/2] Bagimliliklar kontrol ediliyor...")
     
     # 检测已安装的 PyTorch 类型
     req_file, pytorch_type, detail = get_requirements_file_from_env()
@@ -1843,7 +1843,7 @@ def check_all_updates():
         print(f"  检测到 PyTorch: {pytorch_type} ({detail})")
         print(f"  依赖文件: {req_file}")
     else:
-        print("  未检测到 PyTorch")
+        print("  PyTorch tespit edilemedi")
         req_file = None
     
     # 检查依赖是否满足
@@ -1855,7 +1855,7 @@ def check_all_updates():
         if str(packaging_dir) not in sys.path:
             sys.path.insert(0, str(packaging_dir))
         
-        print("  正在检查依赖完整性...")
+        print("  Bagimlilik butunlugu kontrol ediliyor...")
         try:
             from build_utils.package_checker import check_req_file, get_missing_packages_from_file
             missing_packages = get_missing_packages_from_file(req_file)
@@ -1873,26 +1873,26 @@ def check_all_updates():
                         print(f"    - {pkg_name}")
                     print(f"    ... 还有 {len(missing_packages) - 10} 个包")
             else:
-                print("  状态: [依赖完整]")
+                print("  Durum: [Bagimliliklar tam]")
         except ImportError:
-            print("  状态: [无法检查，建议更新]")
+            print("  Durum: [Kontrol edilemiyor, guncelleme onerilir]")
             deps_needs_update = True
     else:
-        print("  状态: [需要安装]")
+        print("  Durum: [Kurulum gerekli]")
         deps_needs_update = True
     
-    # 检查完成提示
+    # Kontrol Tamamlandi提示
     print()
     print("=" * 40)
-    print("检查完成")
+    print("Kontrol Tamamlandi")
     print("=" * 40)
     
     # 汇总结果
     print()
-    print("检查结果汇总:")
+    print("Kontrol Sonuclari:")
     print("=" * 40)
-    print(f"代码: {'需要更新' if code_needs_update else '已是最新'}")
-    print(f"依赖: {'需要更新/安装' if deps_needs_update else '已满足'}")
+    print(f"代码: {'Guncelleme gerekli' if code_needs_update else 'Zaten en yeni'}")
+    print(f"依赖: {'Guncelleme/Kurulum gerekli' if deps_needs_update else 'Karsilandi'}")
     print("=" * 40)
     
     return code_needs_update, deps_needs_update, current_version, remote_version, req_file, missing_packages
@@ -1902,8 +1902,8 @@ def maintenance_menu():
     """维护菜单"""
     print()
     print("=" * 40)
-    print("漫画翻译器 - 更新维护工具")
-    print("Manga Translator UI - Update Tool")
+    print("Manga Cevirici - 更新维护工具")
+    print("Manga Translator UI - Guncelleme Araci")
     print("=" * 40)
     
     # 创建一个简单的 args 对象用于依赖更新
@@ -1921,16 +1921,16 @@ def maintenance_menu():
     
     while True:
         print()
-        print("请选择操作:")
-        print("[1] 更新代码 (强制同步)")
-        print("[2] 更新/安装依赖")
-        print("[3] 完整更新 (代码+依赖)")
-        print("[4] 修复模式 (强制同步代码+重装所有依赖)")
-        print("[5] 重新检查版本")
-        print("[6] 退出")
+        print("Islem secin:")
+        print("[1] Kodu guncelle (zorla senkronize et)")
+        print("[2] Bagimliliklari Guncelle/Kur")
+        print("[3] Tam guncelleme (kod + bagimliliklar)")
+        print("[4] Onarim modu (zorla senkronize + tum bagimliliklari yeniden kur)")
+        print("[5] Surumu yeniden kontrol et")
+        print("[6] Cik")
         print()
         
-        choice = input("请选择 (1/2/3/4/5/6): ").strip()
+        choice = input("Seciniz (1/2/3/4/5/6): ").strip()
         
         if choice == '1':
             update_code_force()
@@ -1946,21 +1946,21 @@ def maintenance_menu():
             
             print()
             if not code_needs_update and not deps_needs_update:
-                print("[信息] 代码和依赖都已是最新，无需更新")
+                print("[BILGI] Kod ve bagimliliklar zaten en yeni, guncelleme gerekmiyor")
                 input("\n按回车键继续...")
                 continue
             
             # 询问是否继续
             print()
-            confirm = input("是否继续完整更新? (y/n): ").strip().lower()
+            confirm = input("Tam guncellemeye devam edilsin mi? (y/n): ").strip().lower()
             if confirm not in ['y', 'yes']:
-                print("取消更新")
+                print("Guncelleme iptal edildi")
                 input("\n按回车键继续...")
                 continue
             
             print()
             print("=" * 40)
-            print("开始完整更新")
+            print("Tam Guncelleme Basliyor")
             print("=" * 40)
             
             # 执行更新
@@ -1971,10 +1971,10 @@ def maintenance_menu():
                 print("[1/2] 更新代码...")
                 if not update_code_force(skip_confirm=True):
                     update_success = False
-                    print("[错误] 代码更新失败，跳过依赖更新")
+                    print("[HATA] Kod guncellenemedi, bagimliliklar atlaniyor")
             else:
                 print()
-                print("[1/2] 代码已是最新，跳过")
+                print("[1/2] Kod zaten en yeni, atlaniyor")
             
             if update_success and deps_needs_update:
                 print()
@@ -1995,64 +1995,64 @@ def maintenance_menu():
                     update_dependencies(args)
             elif update_success:
                 print()
-                print("[2/2] 依赖已满足，跳过")
+                print("[2/2] Bagimliliklar karsilandi, atlaniyor")
             
             print()
             if update_success:
                 print("=" * 40)
-                print("[完成] 完整更新完成")
+                print("[TAMAM] 完整更新完成")
                 print("=" * 40)
             
             input("\n按回车键继续...")
             
         elif choice == '4':
-            # 修复模式：强制同步代码 + 重装所有依赖
+            # Onarim Modu：强制同步代码 + 重装所有依赖
             print()
             print("=" * 40)
-            print("修复模式")
+            print("Onarim Modu")
             print("=" * 40)
             print()
-            print("[警告] 此操作将:")
-            print("  1. 强制同步代码到远程版本（本地修改将丢失）")
-            print("  2. 卸载并重新安装所有依赖包")
+            print("[UYARI] Bu islem sunlari yapacak:")
+            print("  1. Kodu uzak surume zorla senkronize et (yerel degisiklikler silinecek)")
+            print("  2. Tum bagimlilik paketlerini kaldir ve yeniden kur")
             print()
             
-            confirm = input("是否继续修复? (y/n): ").strip().lower()
+            confirm = input("Onarima devam edilsin mi? (y/n): ").strip().lower()
             if confirm not in ['y', 'yes']:
-                print("取消修复")
+                print("Onarim iptal edildi")
                 input("\n按回车键继续...")
                 continue
             
             print()
             print("=" * 40)
-            print("开始修复")
+            print("Onarim Basliyor")
             print("=" * 40)
             
             # 1. 强制同步代码
             print()
-            print("[1/2] 强制同步代码...")
+            print("[1/2] Kod zorla senkronize ediliyor...")
             if not update_code_force(skip_confirm=True):
-                print("[错误] 代码同步失败")
+                print("[HATA] Kod senkronizasyonu basarisiz")
                 input("\n按回车键继续...")
                 continue
             
             # 2. 重装所有依赖
             print()
-            print("[2/2] 重新安装所有依赖...")
+            print("[2/2] Tum bagimliliklar yeniden kuruluyor...")
             
             # 检测 PyTorch 类型
             req_file, pytorch_type, detail = get_requirements_file_from_env()
             if not req_file:
-                # 未检测到 PyTorch，让用户选择
+                # PyTorch tespit edilemedi，让用户选择
                 args.requirements = 'auto'
-                print("未检测到 PyTorch，将自动检测并安装")
+                print("PyTorch tespit edilemedi, otomatik tespit edilip kurulacak")
             else:
                 args.requirements = req_file
-                print(f"检测到 PyTorch 类型: {pytorch_type} ({detail})")
+                print(f"Tespit edilen PyTorch turu: {pytorch_type} ({detail})")
                 print(f"使用: {req_file}")
             
             print()
-            print("正在卸载所有依赖...")
+            print("Tum bagimliliklar kaldiriliyor...")
             
             # 读取 requirements 文件，卸载所有包
             if req_file and os.path.exists(req_file):
@@ -2134,14 +2134,14 @@ def maintenance_menu():
                             if len(failed_packages) > 5:
                                 print(f"         ... 还有 {len(failed_packages) - 5} 个")
                         else:
-                            print("  ✓ 所有包卸载完成")
+                            print("  ✓ Tum paketler kaldirildi")
                         
                         # 清理 pip 缓存
-                        print('正在清理 pip 缓存...')
+                        print('pip onbellegi temizleniyor...')
                         run(f'"{python}" -m pip cache purge', "清理缓存", "无法清理缓存", capture_output=False)
                 except Exception as e:
-                    print(f"卸载依赖时出错: {e}")
-                    print("将继续安装...")
+                    print(f"Bagimliliklar kaldirilirken hata: {e}")
+                    print("Kuruluma devam ediliyor...")
             
             # 强制重装
             args.reinstall_torch = True
@@ -2149,17 +2149,17 @@ def maintenance_menu():
             args.frozen = False
             
             print()
-            print("正在重新安装所有依赖...")
+            print("Tum bagimliliklar yeniden kuruluyor...")
             try:
                 prepare_environment(args)
                 print()
                 print("=" * 40)
-                print("[完成] 修复完成")
+                print("[TAMAM] 修复完成")
                 print("=" * 40)
             except Exception as e:
                 print()
                 print("=" * 40)
-                print(f"[错误] 修复失败: {e}")
+                print(f"[HATA] Onarim basarisiz: {e}")
                 print("=" * 40)
             
             input("\n按回车键继续...")
@@ -2169,11 +2169,11 @@ def maintenance_menu():
             
         elif choice == '6':
             print()
-            print("退出更新工具")
+            print("Guncelleme aracinden cik")
             break
             
         else:
-            print("无效选项")
+            print("Gecersiz secim")
 
 
 def launch_ui(args):
@@ -2207,7 +2207,7 @@ def main():
         sys.exit(1)
 
     # 解析命令行参数
-    parser = argparse.ArgumentParser(description='漫画翻译器启动脚本')
+    parser = argparse.ArgumentParser(description='Manga Ceviri Baslatic Betigi')
     parser.add_argument("--update", action='store_true', help="启动前检查并自动更新")
     parser.add_argument("--frozen", action='store_true', help="跳过依赖检查(打包版本)")
     parser.add_argument("--install-deps-only", action='store_true', help="仅安装依赖,不启动UI")
@@ -2231,13 +2231,13 @@ def main():
     # 显示版本信息
     commit = commit_hash()
     print('=' * 60)
-    print('漫画翻译器 Manga Translator UI')
+    print('Manga Cevirici - Manga Translator UI')
     print('=' * 60)
-    print(f'版本: {VERSION}')
-    print(f'分支: {BRANCH}')
-    print(f'提交: {commit[:8]}')
+    print(f'Surum: {VERSION}')
+    print(f'Dal: {BRANCH}')
+    print(f'Commit: {commit[:8]}')
     print(f'Python: {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')
-    print(f'Python路径: {sys.executable}')
+    print(f'Python yolu: {sys.executable}')
     print('=' * 60)
 
     # 切换到项目根目录 (launch.py 在 packaging/ 下,需要切换到父目录)
@@ -2258,8 +2258,8 @@ def main():
         
         # 如果是 AMD GPU 且安装了 requirements_amd.txt，提示 PyTorch 状态
         if use_amd_pytorch and amd_gfx_version:
-            print('\n✓ AMD ROCm PyTorch 已安装/更新')
-            print(f'  gfx 版本: {amd_gfx_version}')
+            print('\n✓ AMD ROCm PyTorch kuruldu/guncellendi')
+            print(f'  gfx Surum: {amd_gfx_version}')
         
         return
 
