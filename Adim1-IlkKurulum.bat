@@ -384,19 +384,15 @@ if not exist ".git" (
         echo [BILGI] Sikistirilmis dosyadan acilmis kod dosyalari tespit edildi
         echo.
         echo Seciniz:
-        echo [1] Git yapilandirmasini atla, dogrudan bagimliliklari yukle (Adim4 ile guncellenemez)
+        echo [1] Git yapilandirmasini atla, dogrudan bagimliliklari yukle - Onerilen (Adim4 ile guncellenemez)
         echo [2] Git deposunu baslat ve uzak depoya bagla (Adim4 ile guncellenebilir)
         echo [3] Cik
         echo.
-        set /p zip_choice="Seciniz (1/2/3, varsayilan 2): "
+        set /p zip_choice="Seciniz (1/2/3, varsayilan 1): "
         
         if "!zip_choice!"=="3" (
             exit /b 0
-        ) else if "!zip_choice!"=="1" (
-            echo [OK] Git yapilandirmasi atlaniyor, mevcut kod kullaniliyor
-            echo.
-            goto :create_venv
-        ) else (
+        ) else if "!zip_choice!"=="2" (
             echo [BILGI] Git deposu baslatiliyor...
             "%GIT%" init
             if !ERRORLEVEL! neq 0 (
@@ -407,12 +403,14 @@ if not exist ".git" (
             REM Hedef depo adresini al
             call :get_repo_url
             echo.
-            echo Uzak depo ekleniyor...
-            "%GIT%" remote add origin !REPO_URL!
-            if !ERRORLEVEL! neq 0 (
-                echo [HATA] Uzak depo eklenemedi
-                pause
-                exit /b 1
+            echo Uzak depo ayarlaniyor...
+            "%GIT%" remote get-url origin >nul 2>&1
+            if !ERRORLEVEL! == 0 (
+                "%GIT%" remote set-url origin !REPO_URL!
+                echo [OK] Uzak depo guncellendi: !REPO_URL!
+            ) else (
+                "%GIT%" remote add origin !REPO_URL!
+                echo [OK] Uzak depo eklendi: !REPO_URL!
             )
             echo.
             echo Uzak dal getiriliyor...
@@ -426,6 +424,10 @@ if not exist ".git" (
             echo.
             echo [OK] Git deposu baslatildi
             echo [BILGI] Guncelleme icin Adim4 kullanilabilir
+            echo.
+            goto :create_venv
+        ) else (
+            echo [OK] Git yapilandirmasi atlaniyor, mevcut kod kullaniliyor
             echo.
             goto :create_venv
         )
@@ -549,8 +551,8 @@ if exist ".git" (
     echo ========================================
     echo.
     echo +----------------------------------------+
-    echo ¦  TEHLIKELI ISLEM: Cok sayida dosya     ¦
-    echo ¦  silinecek!                            ¦
+    echo ?  TEHLIKELI ISLEM: Cok sayida dosya     ?
+    echo ?  silinecek!                            ?
     echo +----------------------------------------+
     echo.
     echo [Silinecek Kapsam]
@@ -563,8 +565,8 @@ if exist ".git" (
     echo   * Kurulum betigi (Adim1-IlkKurulum.bat)
     echo.
     echo +----------------------------------------+
-    echo ¦  Diger TUM dosya ve klasorler          ¦
-    echo ¦  kalici olarak silinecek!              ¦
+    echo ?  Diger TUM dosya ve klasorler          ?
+    echo ?  kalici olarak silinecek!              ?
     echo +----------------------------------------+
     echo.
     echo Devam edilsin mi?
