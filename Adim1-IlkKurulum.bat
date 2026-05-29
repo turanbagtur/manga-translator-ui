@@ -548,10 +548,10 @@ if exist ".git" (
     echo ***  UYARI: Dosyalar Silinecek  ***
     echo ========================================
     echo.
-    echo ╔════════════════════════════════════════╗
-    echo ║  TEHLIKELI ISLEM: Cok sayida dosya     ║
-    echo ║  silinecek!                            ║
-    echo ╚════════════════════════════════════════╝
+    echo +----------------------------------------+
+    echo �  TEHLIKELI ISLEM: Cok sayida dosya     �
+    echo �  silinecek!                            �
+    echo +----------------------------------------+
     echo.
     echo [Silinecek Kapsam]
     echo   Korunan dosyalar disindaki TUM dosya ve klasorler silinecek!
@@ -562,10 +562,10 @@ if exist ".git" (
     echo   * Miniconda3 (Conda ortami)
     echo   * Kurulum betigi (Adim1-IlkKurulum.bat)
     echo.
-    echo ╔════════════════════════════════════════╗
-    echo ║  Diger TUM dosya ve klasorler          ║
-    echo ║  kalici olarak silinecek!              ║
-    echo ╚════════════════════════════════════════╝
+    echo +----------------------------------------+
+    echo �  Diger TUM dosya ve klasorler          �
+    echo �  kalici olarak silinecek!              �
+    echo +----------------------------------------+
     echo.
     echo Devam edilsin mi?
     echo [1] Evet - Sil ve yeniden klonla
