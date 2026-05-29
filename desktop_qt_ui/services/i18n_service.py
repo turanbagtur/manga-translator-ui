@@ -70,13 +70,13 @@ class I18nManager:
     
     def _init_supported_locales(self):
         """初始化支持的语言列表"""
-self.available_locales = {
-            "zh_CN": LocaleInfo("zh_CN", "��?��"���-�", "Simplified Chinese"),
-            "zh_TW": LocaleInfo("zh_TW", "��?��"���-�", "Traditional Chinese"),
+        self.available_locales = {
+            "zh_CN": LocaleInfo("zh_CN", "简体中文", "Simplified Chinese"),
+            "zh_TW": LocaleInfo("zh_TW", "繁體中文", "Traditional Chinese"),
             "en_US": LocaleInfo("en_US", "English", "English"),
-            "ja_JP": LocaleInfo("ja_JP", "�-��o���?", "Japanese"),
-            "ko_KR": LocaleInfo("ko_KR", "�o����-�", "Korean"),
-            "es_ES": LocaleInfo("es_ES", "Espa��ol", "Spanish"),
+            "ja_JP": LocaleInfo("ja_JP", "日本語", "Japanese"),
+            "ko_KR": LocaleInfo("ko_KR", "한국어", "Korean"),
+            "es_ES": LocaleInfo("es_ES", "Español", "Spanish"),
             "tr_TR": LocaleInfo("tr_TR", "Turkce", "Turkish"),
         }
     
